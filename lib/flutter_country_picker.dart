@@ -152,7 +152,9 @@ class CountryPicker extends StatelessWidget {
   }
 
   Future<Null> _selectCountry(
-      BuildContext context, Country defaultCountry) async {
+    BuildContext context,
+    Country defaultCountry,
+  ) async {
     final Country picked = await showCountryPicker(
       context: context,
       defaultCountry: defaultCountry,
@@ -173,8 +175,8 @@ Future<Country> showCountryPicker({
   return await showDialog<Country>(
     context: context,
     builder: (BuildContext context) => _CountryPickerDialog(
-          defaultCountry: defaultCountry,
-        ),
+      defaultCountry: defaultCountry,
+    ),
   );
 }
 
@@ -183,6 +185,8 @@ class _CountryPickerDialog extends StatefulWidget {
     Key key,
     Country defaultCountry,
   }) : super(key: key);
+
+  final bool displayDialingCodeInPicker = false;
 
   @override
   State<StatefulWidget> createState() => _CountryPickerDialogState();
@@ -221,20 +225,45 @@ class _CountryPickerDialogState extends State<_CountryPickerDialog> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.black12,
       child: Dialog(
+        backgroundColor: Colors.black,
         child: Column(
           children: <Widget>[
             new TextField(
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              cursorColor: Colors.redAccent[400], //primaryColor,
               decoration: new InputDecoration(
+                focusColor: Colors.redAccent[400],
+                hoverColor: Colors.redAccent[400],
                 hintText: MaterialLocalizations.of(context).searchFieldLabel,
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.redAccent[400],
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.redAccent[400]),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.redAccent[400]),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.redAccent[400]),
+                ),
+                hintStyle: TextStyle(color: Colors.white),
+                prefixStyle: TextStyle(color: Colors.redAccent[400]),
                 suffixIcon: filter == null || filter == ""
                     ? Container(
                         height: 0.0,
                         width: 0.0,
                       )
                     : InkWell(
-                        child: Icon(Icons.clear),
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.redAccent[400],
+                        ),
                         onTap: () {
                           controller.clear();
                         },
@@ -256,7 +285,9 @@ class _CountryPickerDialogState extends State<_CountryPickerDialog> {
                         country.isoCode.contains(filter)) {
                       return InkWell(
                         child: ListTile(
-                          trailing: Text("+ ${country.dialingCode}"),
+                          trailing: widget.displayDialingCodeInPicker
+                              ? Text("+ ${country.dialingCode}")
+                              : Text(''),
                           title: Row(
                             children: <Widget>[
                               Image.asset(
@@ -268,6 +299,10 @@ class _CountryPickerDialogState extends State<_CountryPickerDialog> {
                                   margin: EdgeInsets.only(left: 8.0),
                                   child: Text(
                                     country.name,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),

@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Flutter Country Picker Demo',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: new MyHomePage(),
     );
@@ -35,10 +35,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: new Center(
         child: CountryPicker(
-          showDialingCode: true,
+          showDialingCode: false,
           onChanged: (Country country) {
             setState(() {
               _selected = country;
+              print(_selected.name);
             });
           },
           selectedCountry: _selected,
